@@ -18,7 +18,7 @@ registry.category("web_tour.tours").add("website_sale_stock_provisioning_date", 
         {
             trigger: "a#add_to_cart",
             extra_trigger:
-                ".availability_messages:has(span:contains('Next provisioning date:'))",
+                ".availability_messages:has(span:contains('New stock expected on:'))",
         },
     ],
 });
