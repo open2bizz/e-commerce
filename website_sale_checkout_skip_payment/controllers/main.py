@@ -21,17 +21,22 @@ class CheckoutSkipPaymentWebsite(WebsiteSale):
         """When we skip the payment, we'll just confirm the order and send the proper
         confirmation message"""
         order_id = request.session.get("sale_last_order_id")
+        print(order_id)
+        order = request.env["sale.order"].sudo().browse(order_id)
+        order.sudo().write({'state':'sale'})
         if not request.website.checkout_skip_payment or not order_id:
             return super().shop_payment_confirmation(**post)
-        order = request.env["sale.order"].sudo().browse(order_id)
         try:
-            order.with_context(mark_so_as_sent=True)._send_order_confirmation_mail()
+            print(order)
+            order._send_order_confirmation_mail()
         except Exception:
+            print("except")
             return request.render(
                 "website_sale_checkout_skip_payment.confirmation_order_error"
             )
         # This could not finish (e.g.: sale_financial_risk exceeded)
-        order.action_confirm()
+        #order.action_confirm()
         request.website.sale_reset()
         values = self._prepare_shop_payment_confirmation_values(order)
+        print("end")
         return request.render("website_sale.confirmation", values)
