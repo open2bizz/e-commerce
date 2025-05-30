@@ -23,7 +23,7 @@ class CheckoutSkipPaymentWebsite(WebsiteSale):
         order_id = request.session.get("sale_last_order_id")
         print(order_id)
         order = request.env["sale.order"].sudo().browse(order_id)
-        order.sudo().write({'state':'sale'})
+        order.sudo().action_confirm()
         if not request.website.checkout_skip_payment or not order_id:
             return super().shop_payment_confirmation(**post)
         try:
